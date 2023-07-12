@@ -30,7 +30,7 @@ resource "aws_security_group_rule" "ssh" {
 }
 
 resource "aws_security_group_rule" "http" {
-    type              = "egress"
+    type              = "ingress"
     from_port        = 80
     to_port          = 80
     protocol         = "tcp"
