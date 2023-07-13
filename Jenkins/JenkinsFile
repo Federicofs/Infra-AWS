@@ -1,0 +1,64 @@
+// // pluggis: 
+//     Docker     
+//     Nodejs 
+//     Snyk (no recomando)
+
+pipeline {
+    agent any
+    tools {
+        nodejs "node"
+    }
+    stages {      
+       stage('Get repo'){
+            steps {
+                sh 'git clone https://github.com/Federicofs/app-devops-bootcamp.git'
+            }
+        }
+        stage('Install') {
+            steps {
+                dir('app-devops-bootcamp/api-store') {
+                    sh 'npm install'
+                }  
+            }
+        }
+        stage('Test') {
+            steps{
+                dir('app-devops-bootcamp/api-store') {
+                    sh 'npm audit'
+                    script{
+                            properties($class: 'GithubProjectProperty',
+                            projectUrlStr: 'https://github.com/Federicofs/app-devops-bootcamp.git')
+                    }
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                dir('app-devops-bootcamp/api-store') {
+                    sh 'npm run build'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                dir('app-devops-bootcamp/api-store'){
+                    withCredentials([usernamePassword(credentialsId: 'DOCKER_ID', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {                     
+                        sh 'docker login -u ${USERNAME} -p ${PASSWORD} ' 
+                        sh 'docker build -t ${USERNAME}/NAME .'
+                        sh 'docker push ${USERNAME}/NAME'
+                    }
+                }
+            }
+        }
+    }
+    post {
+    always {
+      sh 'docker logout'
+      deleteDir()
+    }
+        failure{
+                  step([$class: 'GitHubIssueNotifier',
+               issueAppend: true, issueTitle: 'security', issueLabel: 'security'])
+        }
+    }
+}
