@@ -1,12 +1,10 @@
-# variable.tfvar > mian.tf > module
-
 module "ec2_instance" {
     source  = "terraform-aws-modules/ec2-instance/aws"
     version = "5.2.1"
   
     name = var.ec2_name
-    ami = "ami-0557a15b87f6559cf" #hardcodeado
-    instance_type = "t2.micro" #hardcodeado
+    ami = "ami-0557a15b87f6559cf"
+    instance_type = "t2.micro"
     key_name = var.key_name
     user_data = var.user_data
   #sg

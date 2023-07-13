@@ -1,5 +1,4 @@
 # variable.tfvar > mian.tf > module
-# de aca se van a los modulos 
 module "vpc_r" {
   source = "./module/VPC"
 
@@ -13,11 +12,11 @@ module "ec2_r" {
   ec2_name = var.base_ec2_name
   key_name = var.base_key_ec2
   user_data = file("./example.sh")
-  # vpc_security_group_ids = [module.sg_r.security_group_public_id] # 80 ; 443
-  #vpc output
+  #vpc 
+  subnet_id = module.vpc_r.public_subnets[0]  
+  #sg 
   security_gropus_public_id = module.sg_r.security_group_public_id
   security_gropus_private_id = module.sg_r.security_gropus_private_id
-  subnet_id = module.vpc_r.public_subnets[0]
   # tags 
 }
 

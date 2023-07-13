@@ -5,7 +5,8 @@ resource "aws_security_group" "public" {
     vpc_id      = var.vpc_id
 
     tags = {
-        Name = "sg_public"
+        Name = "sg_public" 
+        Environment = "dev"
     }
 }
 
@@ -57,6 +58,7 @@ resource "aws_security_group" "private" {
 
     tags = {
         Name = "sg_private"
+        Environment = "dev"
     }
 }
 
