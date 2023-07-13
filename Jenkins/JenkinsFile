@@ -11,7 +11,7 @@ pipeline {
     stages {      
        stage('Get repo'){
             steps {
-                sh 'git clone URL'
+                sh 'git clone https://github.com/Federicofs/app-devops-bootcamp.git'
             }
         }
         stage('Install') {
@@ -27,7 +27,7 @@ pipeline {
                     sh 'npm audit'
                     script{
                             properties($class: 'GithubProjectProperty',
-                            projectUrlStr: 'URL')
+                            projectUrlStr: 'https://github.com/Federicofs/app-devops-bootcamp.git')
                     }
                 }
             }
